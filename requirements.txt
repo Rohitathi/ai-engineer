@@ -1,0 +1,7 @@
+Flask
+Flask-Login
+Flask-SQLAlchemy
+faiss-cpu
+numpy
+requests
+sentence-transformers
