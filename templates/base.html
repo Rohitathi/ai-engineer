@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Connect Clean</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+margin:20px;
+}
+
+nav{
+margin-bottom:15px;
+}
+
+.ai-bar{
+background:#f2f2f2;
+padding:12px;
+border-radius:6px;
+margin-bottom:20px;
+}
+
+.ai-input{
+padding:8px;
+width:300px;
+}
+
+.ai-btn{
+padding:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav>
+<a href="/welcome">Home</a> |
+<a href="/nearby">Nearby</a> |
+<a href="/inbox">Inbox</a> |
+<a href="/logout">Logout</a>
+</nav>
+
+<hr>
+
+<!-- CONNECT AI BAR -->
+
+<div class="ai-bar">
+
+<strong>Connect AI</strong><br><br>
+
+<form id="global-ai-form">
+
+<input
+id="global-ai-input"
+class="ai-input"
+type="text"
+name="command"
+placeholder="Ask Connect AI... (ex: find meditation people near me)"
+
+>
+
+<button class="ai-btn" type="submit">
+Run
+</button>
+
+</form>
+
+<div id="global-ai-result" style="display:none; margin-top:12px; padding:12px; border:1px solid #ddd; border-radius:6px; background:#fff;"></div>
+
+</div>
+
+<!-- PAGE CONTENT -->
+
+{% block content %}{% endblock %}
+
+<script>
+function renderAiResult(containerId, data) {
+const container = document.getElementById(containerId);
+if (!container) {
+return;
+}
+
+const steps = Array.isArray(data.steps) && data.steps.length
+? `<div style="margin-top:8px;"><strong>Steps:</strong><pre style="white-space:pre-wrap;">${JSON.stringify(data.steps, null, 2)}</pre></div>`
+: "";
+
+const results = Array.isArray(data.results) && data.results.length
+? `<div style="margin-top:8px;"><strong>Results:</strong><pre style="white-space:pre-wrap;">${JSON.stringify(data.results, null, 2)}</pre></div>`
+: "";
+
+container.style.display = "block";
+container.innerHTML = `
+<div><strong>Reply:</strong> ${data.reply || "No reply returned."}</div>
+${steps}
+${results}
+`;
+}
+
+async function runAiQuery(message, containerId) {
+const response = await fetch("/ai", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ message: message })
+});
+
+const data = await response.json();
+renderAiResult(containerId, data);
+return data;
+}
+
+const globalAiForm = document.getElementById("global-ai-form");
+if (globalAiForm) {
+globalAiForm.addEventListener("submit", async function(event) {
+event.preventDefault();
+const input = document.getElementById("global-ai-input");
+const message = (input.value || "").trim();
+if (!message) {
+return;
+}
+await runAiQuery(message, "global-ai-result");
+});
+}
+</script>
+
+</body>
+</html>

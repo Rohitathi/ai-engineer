@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Welcome, {{ current_user.username }}</h2>
+
+<!-- ================= AI SEARCH BOX ================= -->
+
+<div style="margin-top:20px; padding:15px; border:1px solid #ddd; border-radius:8px; width:400px;">
+
+<h3>Connect AI</h3>
+
+<form id="welcome-ai-form">
+
+<input
+type="text"
+id="welcome-ai-input"
+name="command"
+placeholder="Find meditation people near me and suggest who I should message"
+style="padding:8px; width:75%;"
+
+>
+
+<button type="submit" style="padding:8px;">
+Search
+</button>
+
+</form>
+
+<div id="welcome-ai-result" style="display:none; margin-top:12px; padding:12px; border:1px solid #ddd; border-radius:6px; background:#fafafa;"></div>
+
+</div>
+
+<!-- ================= CREATE POST CARD ================= -->
+
+<div style="margin-top:25px; padding:20px; border:1px solid #ddd; border-radius:8px; width:400px;">
+
+<h3>Create Post</h3>
+
+<form method="POST" action="{{ url_for('main.welcome') }}">
+
+<div style="margin-bottom:12px;">
+<input 
+type="text" 
+name="message" 
+placeholder="Post something..."
+required
+style="padding:8px; width:100%;"
+>
+</div>
+
+<div style="margin-bottom:12px;">
+<input 
+type="text" 
+name="category" 
+placeholder="Category (optional)"
+style="padding:8px; width:100%;"
+>
+</div>
+
+<div style="margin-bottom:12px; font-size:14px;">
+<strong>Latitude:</strong>
+<span id="display-lat">Detecting...</span><br>
+
+<strong>Longitude:</strong> <span id="display-lon">Detecting...</span>
+
+</div>
+
+<input type="hidden" name="lat" id="lat">
+<input type="hidden" name="lon" id="lon">
+
+<button type="submit" style="padding:8px; width:100%;">
+Post
+</button>
+
+</form>
+
+</div>
+
+<!-- ================= ALL POSTS ================= -->
+
+<hr style="margin:30px 0;">
+
+<h3>Recent Posts</h3>
+
+{% if posts %}
+{% for post in posts %}
+
+<div style="margin-bottom:15px; padding:15px; border:1px solid #ccc; border-radius:6px; width:400px;">
+
+<strong>{{ post.author.username }}</strong><br>
+{{ post.message }}<br><br>
+
+<small>
+Category: {{ post.category or "N/A" }}<br>
+Latitude: {{ post.lat or "N/A" }}<br>
+Longitude: {{ post.lon or "N/A" }}<br>
+Posted at: {{ post.created_at }}
+</small>
+
+</div>
+
+{% endfor %}
+{% else %}
+
+<p>No posts yet.</p>
+{% endif %}
+
+<!-- ================= GEOLOCATION ================= -->
+
+<script>
+
+function setLocation(position) {
+
+const lat = position.coords.latitude;
+const lon = position.coords.longitude;
+
+document.getElementById("display-lat").innerText = lat;
+document.getElementById("display-lon").innerText = lon;
+
+document.getElementById("lat").value = lat;
+document.getElementById("lon").value = lon;
+
+}
+
+function showError() {
+
+document.getElementById("display-lat").innerText = "Permission denied";
+document.getElementById("display-lon").innerText = "Permission denied";
+
+}
+
+if (navigator.geolocation) {
+navigator.geolocation.getCurrentPosition(setLocation, showError);
+} else {
+document.getElementById("display-lat").innerText = "Not supported";
+document.getElementById("display-lon").innerText = "Not supported";
+}
+
+document.getElementById("welcome-ai-form").addEventListener("submit", async function(event) {
+event.preventDefault();
+const input = document.getElementById("welcome-ai-input");
+const message = (input.value || "").trim();
+if (!message) {
+return;
+}
+await runAiQuery(message, "welcome-ai-result");
+});
+
+</script>
+
+{% endblock %}

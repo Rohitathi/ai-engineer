@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Nearby Users</h2>
+
+{% if users %}
+    {% for user in users %}
+        <div style="margin-bottom:15px; padding:15px; border:1px solid #ccc; border-radius:6px; width:400px;">
+
+            <strong>{{ user.username }}</strong><br>
+            <small>
+                Latitude: {{ user.lat }}<br>
+                Longitude: {{ user.lon }}
+            </small>
+
+            <div style="margin-top:10px;">
+                <a href="{{ url_for('messages.message', user_id=user.id) }}">
+                    <button>Message</button>
+                </a>
+            </div>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No nearby users found.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Find Nearby Users</h2>
+
+<form id="search-ai-form">
+    <label>Describe who you want to find:</label>
+    <input
+        type="text"
+        id="search-ai-input"
+        placeholder="Find meditation people near me and suggest who I should message"
+        style="width:360px;"
+        required
+    >
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<h3>Results:</h3>
+
+<div id="search-ai-result" style="padding:12px; border:1px solid #ddd; border-radius:6px; background:#fafafa;">
+    Ask Connect AI to search by interest, distance, and best match.
+</div>
+
+<script>
+document.getElementById("search-ai-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    const input = document.getElementById("search-ai-input");
+    const message = (input.value || "").trim();
+    if (!message) {
+        return;
+    }
+    await runAiQuery(message, "search-ai-result");
+});
+</script>
+
+{% endblock %}

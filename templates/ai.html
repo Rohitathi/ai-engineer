@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>AI Assistant</h2>
+
+<div id="chatbox" style="
+    width:500px;
+    height:350px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    padding:10px;
+    overflow-y:auto;
+    margin-bottom:10px;
+">
+</div>
+
+
+<input 
+    type="text" 
+    id="msg" 
+    placeholder="Try: nearby users within 10km"
+    style="width:380px; padding:6px;"
+>
+
+<button onclick="sendAI()" style="padding:6px 12px;">
+Send
+</button>
+
+
+<script>
+
+function addMessage(sender, text)
+{
+    let box = document.getElementById("chatbox");
+
+    box.innerHTML += `
+        <div style="margin-bottom:8px;">
+            <strong>${sender}:</strong> ${text}
+        </div>
+    `;
+
+    box.scrollTop = box.scrollHeight;
+}
+
+
+function sendAI()
+{
+    let message = document.getElementById("msg").value;
+
+    if(message.trim() === "")
+        return;
+
+    addMessage("You", message);
+
+    document.getElementById("msg").value = "";
+
+    fetch("/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message })
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        addMessage("AI", data.reply);
+
+        if(data.steps)
+        {
+            addMessage("Planner", JSON.stringify(data.steps));
+        }
+
+        if(data.results)
+        {
+            addMessage("Tools", JSON.stringify(data.results));
+        }
+
+    });
+
+}
+
+
+document.getElementById("msg").addEventListener("keypress", function(e)
+{
+    if(e.key === "Enter")
+    {
+        sendAI();
+    }
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Register</h2>
+
+<div style="margin-top:20px; padding:20px; border:1px solid #ddd; border-radius:8px; width:400px;">
+
+<form method="POST" action="{{ url_for('auth.register') }}">
+
+    <!-- Username -->
+    <div style="margin-bottom:12px;">
+        <input 
+            type="text" 
+            name="username" 
+            placeholder="Username"
+            required
+            style="padding:8px; width:100%;"
+        >
+    </div>
+
+    <!-- Email -->
+    <div style="margin-bottom:12px;">
+        <input 
+            type="email" 
+            name="email" 
+            placeholder="Email"
+            required
+            style="padding:8px; width:100%;"
+        >
+    </div>
+
+    <!-- Password -->
+    <div style="margin-bottom:12px;">
+        <input 
+            type="password" 
+            name="password"
+            placeholder="Password"
+            required
+            style="padding:8px; width:100%;"
+        >
+    </div>
+
+    <!-- Location Display -->
+    <div style="margin-bottom:12px; font-size:14px;">
+        <strong>Latitude:</strong> 
+        <span id="display-lat">Detecting...</span><br>
+
+        <strong>Longitude:</strong> 
+        <span id="display-lon">Detecting...</span>
+    </div>
+
+    <!-- Hidden Location Fields -->
+    <input type="hidden" name="lat" id="lat">
+    <input type="hidden" name="lon" id="lon">
+
+    <button type="submit" style="padding:8px; width:100%;">
+        Register
+    </button>
+
+</form>
+
+</div>
+
+<!-- ================= GEOLOCATION SCRIPT ================= -->
+<script>
+function setLocation(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    document.getElementById("display-lat").innerText = lat;
+    document.getElementById("display-lon").innerText = lon;
+
+    document.getElementById("lat").value = lat;
+    document.getElementById("lon").value = lon;
+}
+
+function showError() {
+    document.getElementById("display-lat").innerText = "Permission denied";
+    document.getElementById("display-lon").innerText = "Permission denied";
+}
+
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(setLocation, showError);
+} else {
+    document.getElementById("display-lat").innerText = "Not supported";
+    document.getElementById("display-lon").innerText = "Not supported";
+}
+</script>
+
+{% endblock %}
