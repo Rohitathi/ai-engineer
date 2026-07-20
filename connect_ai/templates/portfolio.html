@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width:850px; margin:0 auto; padding:20px; background:#fff; border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,0.08);">
+  <h1 style="margin-top:0;">Rohit’s Portfolio</h1>
+  <p style="color:#475569; font-size:16px; line-height:1.8;">Welcome to the Rohit Connect AI portfolio page. This page showcases production-ready capabilities for Connect AI, AWS deployment, and GitHub-based continuous delivery.</p>
+
+  <section style="margin-top:28px;">
+    <h2>1. Connect</h2>
+    <p style="color:#334155;">This application is built as a social discovery platform. Key features include:</p>
+    <ul style="color:#334155; line-height:1.8;">
+      <li>User registration, login, and profile management</li>
+      <li>Real-time nearby search and location-based matching</li>
+      <li>AI-enhanced recommendations and search</li>
+      <li>Messaging and automation support</li>
+    </ul>
+  </section>
+
+  <section style="margin-top:28px;">
+    <h2>2. AWS</h2>
+    <p style="color:#334155;">This project is prepared for AWS deployment using Elastic Beanstalk, Docker, and Kubernetes. The repository includes:</p>
+    <ul style="color:#334155; line-height:1.8;">
+      <li>Elastic Beanstalk configuration via <code>.elasticbeanstalk</code></li>
+      <li>Dockerfile and docker-compose.yml for containerized deployment</li>
+      <li>Kubernetes manifests under <code>k8s/</code></li>
+      <li>Prometheus and Grafana monitoring stack</li>
+    </ul>
+  </section>
+
+  <section style="margin-top:28px;">
+    <h2>3. Production</h2>
+    <p style="color:#334155;">The production setup includes observability, telemetry, and deployment readiness:</p>
+    <ul style="color:#334155; line-height:1.8;">
+      <li>Prometheus metrics endpoint at <code>/metrics</code></li>
+      <li>Health and readiness checks at <code>/healthz</code> and <code>/ready</code></li>
+      <li>OpenTelemetry tracing support</li>
+      <li>Kafka and Redis integration hooks</li>
+      <li>GitHub sync and MLOps helper scripts</li>
+    </ul>
+  </section>
+
+  <section style="margin-top:28px;">
+    <h2>How to deploy</h2>
+    <p style="color:#334155;">To deploy the latest GitHub changes to AWS, the recommended flow is:</p>
+    <ol style="color:#334155; line-height:1.8;">
+      <li>Push code to GitHub</li>
+      <li>Use GitHub Actions or AWS CodePipeline</li>
+      <li>Deploy to Elastic Beanstalk or ECS</li>
+      <li>Monitor the app with Grafana / Prometheus</li>
+    </ol>
+  </section>
+
+  <section style="margin-top:28px;">
+    <h2>Live services</h2>
+    <p style="color:#334155;">Once deployed, the key URLs are:</p>
+    <ul style="color:#334155; line-height:1.8;">
+      <li>Application: <code>http://connectsingai.com/rohitportfolio</code></li>
+      <li>Metrics: <code>/metrics</code></li>
+      <li>Readiness: <code>/ready</code></li>
+      <li>Grafana dashboard: <code>/grafana</code> (if configured)</li>
+    </ul>
+  </section>
+</div>
+{% endblock %}

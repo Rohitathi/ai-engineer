@@ -13,6 +13,11 @@ def index():
     return redirect(url_for("auth.login"))
 
 
+@main.route("/rohitportfolio")
+def rohit_portfolio():
+    return render_template("portfolio.html")
+
+
 @main.route("/welcome", methods=["GET", "POST"])
 @login_required
 def welcome():
