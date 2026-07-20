@@ -3,6 +3,13 @@ from datetime import datetime
 from flask_login import current_user
 
 
+def _is_authenticated_user():
+    try:
+        return bool(current_user.is_authenticated)
+    except Exception:
+        return False
+
+
 class Memory:
     """In-memory conversation and tool log store."""
 
@@ -12,7 +19,7 @@ class Memory:
 
     def add(self, role, content, meta=None):
         meta = dict(meta or {})
-        if current_user.is_authenticated:
+        if _is_authenticated_user():
             meta.setdefault("user_id", current_user.id)
 
         entry = {
@@ -32,7 +39,7 @@ class Memory:
         return self._visible_logs()[-limit:]
 
     def clear(self):
-        if current_user.is_authenticated:
+        if _is_authenticated_user():
             self.logs = [
                 item for item in self.logs if item.get("meta", {}).get("user_id") != current_user.id
             ]
@@ -54,6 +61,6 @@ class Memory:
         return list(reversed(results))
 
     def _visible_logs(self):
-        if not current_user.is_authenticated:
+        if not _is_authenticated_user():
             return list(self.logs)
         return [item for item in self.logs if item.get("meta", {}).get("user_id") == current_user.id]

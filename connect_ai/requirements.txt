@@ -5,3 +5,12 @@ faiss-cpu
 numpy
 requests
 sentence-transformers
+prometheus-client
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http
+kafka-python
+gunicorn
+redis
+requests
+mlflow
+

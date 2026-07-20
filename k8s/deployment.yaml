@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connect-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: connect-ai
+  template:
+    metadata:
+      labels:
+        app: connect-ai
+    spec:
+      containers:
+        - name: connect-ai
+          image: connect-ai:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              value: "5000"
+            - name: HOST
+              value: "0.0.0.0"
+            - name: DEBUG
+              value: "false"
+            - name: PROMETHEUS_ENABLED
+              value: "true"
+            - name: REDIS_ENABLED
+              value: "true"
+            - name: REDIS_URL
+              value: redis://redis:6379/0

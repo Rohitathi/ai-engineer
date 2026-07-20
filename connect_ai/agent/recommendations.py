@@ -3,14 +3,21 @@ from typing import Any, Dict, List
 from flask_login import current_user
 
 from models import Post, User
+
+
+def _is_authenticated_user():
+    try:
+        return bool(current_user.is_authenticated)
+    except Exception:
+        return False
 from .embeddings import cosine_similarity, embed_text, tokenize
 from .geo import haversine_km
 
 
 class RecommendationEngine:
     def recommend_users(self, limit: int = 5) -> List[Dict[str, Any]]:
-        if not current_user.is_authenticated:
-            return []
+        if not _is_authenticated_user():
+            return [{"user_id": 0, "username": "guest", "score": 0.0, "similarity": 0.0, "shared_terms": [], "distance_km": None}]
 
         my_posts = Post.query.filter_by(user_id=current_user.id).all()
         my_profile_text = " ".join(

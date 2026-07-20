@@ -1,1 +1,1 @@
-web: python connect_ai/app.py
+web: gunicorn --bind 0.0.0.0:$PORT connect_ai.app:app
