@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: {}
 
 jobs:
   deploy:
@@ -24,9 +25,10 @@ jobs:
       - name: Install zip utility
         run: sudo apt-get update && sudo apt-get install -y zip
 
-      - name: Package application
+      - name: Package Docker application for Elastic Beanstalk
         run: |
-          zip -r deploy-package.zip . -x '*.git*' '.github/*' 'deploy-package.zip'
+          zip -r deploy-package.zip Dockerfile connect_ai Procfile requirements.txt .elasticbeanstalk config.yml \
+            -x '*.git*' '.github/*' 'deploy-package.zip'
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v20
